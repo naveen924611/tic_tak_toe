@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+     <style>
+        *{
+    padding: 0px;
+    margin: 0px;
+   
+}
+.pic{
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    background-color:rgb(200, 225, 247) ;
+    margin: 16px;
+    padding: 2px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: 0.8s;
+    cursor: pointer;
+    font-size: 120px;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+
+}
+.pic:hover{
+    width: 125px;
+    height: 125px;
+ 
+}
+
+    .grid-container {
+        
+        width: 600px;
+        margin: 1px;
+        margin: 20px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px; /* Optional: adjust the space between the grid items */
+    }
+    #heading{
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: double underline;
+    }
+
+    h4{
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        font-family: cursive;
+    }
+  .addclass{
+    opacity: 0.5;
+  }  
+.btn{
+    padding: 4px 6px;
+    margin: 2px 8px;
+    width: 6rem;
+    height: 2.5rem;
+    border-radius: 15px;
+    border: 2px solid;
+    cursor: pointer;
+    animation: example 2s infinite linear;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+@keyframes example {
+    0%   {border-color: red;}
+    25%  {border-color: yellow;}
+    50%  {border-color: blue;}
+    100% {border-color: green;}
+  }
+
+.btn:hover{
+    zoom: 1.2;
+    background-color: rgb(144, 201, 177);
+    animation: name 4s infinite linear;
+}
+
+@keyframes name {
+    0%   {background-color: rgb(221, 118, 118);}
+    25%  {background-color: yellow;}
+    50%  {background-color: rgb(124, 124, 221);}
+    100% {background-color: rgb(113, 218, 113);}
+  
+}
+  .options{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+  }
+  .winning{
+    animation: moment 3s infinite ease-in-out;
+  }
+  @keyframes moment {
+    0%   {background-color: rgb(221, 118, 118);}
+    25%  {background-color: yellow;
+        width: 122px;
+        height: 122px;}
+    50%  {background-color: rgb(124, 124, 221);
+        width: 125px;
+        height: 125px;}
+    100% {background-color: rgb(113, 218, 113);
+        }
+  }
+     </style>
+</head>
+<body>
+    <h1 id="heading">Welcome to the Tic Tac Toe game</h1>
+  
+    <div class="grid-container">
+        <div class="pic a1"></div>
+        <div class="pic a2"></div>
+        <div class="pic a3"></div>
+        <div class="pic a4"></div>
+        <div class="pic a5" ></div>
+        <div class="pic a6"></div>
+        <div class="pic a7"></div>
+        <div class="pic a8"></div>
+        <div class="pic a9"></div>
+    </div>
+     
+    <h4 class="announce"></h4>
+<div class="options">
+    <button class="btn playagain">playagain</button>
+    <!-- <button class="btn addply" >add name</button>
+    <button class="btn ">.........</button> -->
+</div>
+<div class="player_detials">
+
+</div>
+    <script>
+        let cur = 'X' ;
+let won = false;
+let run = 9;
+//index values
+let p1 = document.querySelector(".a1");
+let p2 = document.querySelector(".a2");
+let p3 = document.querySelector(".a3");
+let p4 = document.querySelector(".a4");
+let p5 = document.querySelector(".a5");
+let p6 = document.querySelector(".a6");
+let p7 = document.querySelector(".a7");
+let p8 = document.querySelector(".a8");
+let p9 = document.querySelector(".a9");
+//result
+let result = document.querySelector(".announce");
+//
+let classlist = document.querySelector(".grid-container").classList;
+
+//reset
+let btn = document.querySelector(".playagain");
+btn.addEventListener("click",reastart);
+
+// //event listener
+// p1.addEventListener("click",change_palyer);
+// p2.addEventListener("click",change_palyer);
+// p3.addEventListener("click",change_palyer);
+// p4.addEventListener("click",change_palyer);
+// p5.addEventListener("click",change_palyer);
+// p6.addEventListener("click",change_palyer);
+// p7.addEventListener("click",change_palyer);
+// p8.addEventListener("click",change_palyer);
+// p9.addEventListener("click",change_palyer);
+
+
+let cells = document.querySelectorAll(".grid-container .pic");
+
+// Event listeners for all cells
+cells.forEach(cell => cell.addEventListener("click", change_player));
+
+function change_player(){
+
+    if (this.innerHTML !== '') {
+        // If the cell is already taken, do nothing
+        return;
+    }
+    this.innerHTML = cur;
+    run--;
+
+    if(cur == 'X'){
+        cur = 'O';
+        // alert('changed into O');
+        
+        
+
+    }
+    else{
+        cur = 'X';
+        // alert('changed to X');
+        
+    }
+
+    if( cells.length - run >= 5){
+        check_win();
+    }
+}
+
+
+
+function check_win() {
+    const status = [
+        [p1, p2, p3], // row
+        [p4, p5, p6], // row
+        [p7, p8, p9], // row
+        [p1, p4, p7], // column
+        [p2, p5, p8], // column
+        [p3, p6, p9], // column
+        [p1, p5, p9], // diagonal
+        [p3, p5, p7]  // diagonal
+    ];
+
+    for (const state of status) {
+        let [a, b, c] = state;
+        if (a.innerHTML !== "" && a.innerHTML === b.innerHTML && b.innerHTML === c.innerHTML) {
+            // alert(a.innerHTML + " won");
+            won = true;
+            cells.forEach(cell => cell.removeEventListener("click", change_player));
+            result.innerHTML = a.innerHTML + " is the winner";
+                classlist.add("addclass");
+              state.forEach(ele =>{
+                ele.classList.add("winning");
+              }
+              )
+            return; // Exit function after finding a winner
+        }
+
+    }
+
+    // Check for draw
+    if (run === 0 && !won) {
+        alert("It's a draw!");
+        classlist.add("addclass");
+        for(let i of status){
+              let [a,b,c] = i;
+            if(a.innerHTML != "" || a.innerHTML == "" && a.innerHTML !== b.innerHTML || b.innerHTML== c.innerHTML) {
+            i.forEach(ele =>{
+                ele.classList.add("winning");
+              })
+            }
+        }
+    }
+}
+
+function reastart(){
+    cells.forEach(cell => cell.addEventListener("click", change_player));
+    classlist.remove("addclass");
+    const status = [
+        [p1, p2, p3], // row
+        [p4, p5, p6], // row
+        [p7, p8, p9], // row
+        [p1, p4, p7], // column
+        [p2, p5, p8], // column
+        [p3, p6, p9], // column
+        [p1, p5, p9], // diagonal
+        [p3, p5, p7]  // diagonal
+    ];
+    for(let i of status) {
+        let [a, b, c] = i;
+        a.innerHTML = "";
+        b.innerHTML = "";
+        c.innerHTML = "";
+        i.forEach(ele =>{
+            ele.classList.remove("winning");
+          });
+    }
+    cur = "X";
+    result.innerHTML="";
+
+}
+    
+
+
+
+    </script>
+</body>
+</html>
